@@ -1,8 +1,5 @@
 import numpy as np
-import copy
-from sklearn.metrics import precision_score,recall_score,f1_score
-from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
+
 
 def file_len(fname):
     with open(fname) as f:
@@ -10,11 +7,14 @@ def file_len(fname):
             pass
     return i + 1
 
+
 def str_list_to_float(str_list):
     return [float(item) for item in str_list]
 
+
 def str_list_to_int(str_list):
     return [int(item) for item in str_list]
+
 
 def node_id_map(edges):
     """map the original node id to [0, node_num)
@@ -41,6 +41,7 @@ def node_id_map(edges):
     new_nodes = list(new_nodes)
     return new_edges, new_nodes
 
+
 def read_edges(train_filename, test_filename, mode=""):
     """read the data from the file
 
@@ -50,7 +51,8 @@ def read_edges(train_filename, test_filename, mode=""):
     Returns:
         train_edges: list, whose element is a list like [node1, node2]
         test_edges: list, whose element is a list like [node1, node2]
-        linked_nodes: dict, dict, <node_id, linked_nodes_id>, store the neighbor nodes of every node
+        linked_nodes: dict, dict, <node_id, linked_nodes_id>, store the
+        neighbor nodes of every node
     """
 
     linked_nodes = {}
@@ -85,7 +87,8 @@ def read_edges(train_filename, test_filename, mode=""):
     if mode == "recommend":
         return len(start_nodes), len(end_nodes), linked_nodes
     else:
-        return len(start_nodes.union(end_nodes)), linked_nodes
+        return linked_nodes
+
 
 def read_edges_from_file(filename):
     with open(filename, "r") as f:
@@ -93,6 +96,7 @@ def read_edges_from_file(filename):
         edges = [str_list_to_int(line.split()) for line in lines]
 
     return edges
+
 
 def get_max_degree(linked_nodes):
     """get the max degree of the network
@@ -111,6 +115,7 @@ def get_max_degree(linked_nodes):
 
     return max_degree
 
+
 def read_emd(filename, n_node, n_embed):
     """use the pretrain node embeddings
     """
@@ -123,6 +128,7 @@ def read_emd(filename, n_node, n_embed):
         node_embed[int(float(emd[0])), :] = str_list_to_float(emd[1:])
 
     return node_embed
+
 
 def generate_neg_links(train_filename, test_filename, test_neg_filename):
     """
@@ -152,7 +158,8 @@ def generate_neg_links(train_filename, test_filename, test_neg_filename):
         edge = test_edges[i]
         start_node = edge[0]
         end_node = edge[1]
-        neg_nodes = list(nodes.difference(set(linked_nodes[edge[0]] + [edge[0]])))
+        neg_nodes = list(
+            nodes.difference(set(linked_nodes[edge[0]] + [edge[0]])))
         neg_node = np.random.choice(neg_nodes, size=1)[0]
         neg_edges.append([start_node, neg_node])
     neg_edges_str = [str(x[0]) + "\t" + str(x[1]) + "\n" for x in neg_edges]
@@ -160,4 +167,16 @@ def generate_neg_links(train_filename, test_filename, test_neg_filename):
         f.writelines(neg_edges_str)
 
 
+def get_probs(filename):
+    probs = np.loadtxt(filename, dtype='float', delimiter=',')
+    prob_exp = np.exp(probs.T)  #prob is so small that will not overflow
+    prob_exp = prob_exp / np.sum(prob_exp, axis=0)
+    return prob_exp.T
 
+"""
+    m * N(nodes)
+"""
+def softmax_norm(array):
+    array_exp = np.exp(array.T)
+    array_exp = array_exp / np.sum(array_exp, axis=0)
+    return array_exp.T
