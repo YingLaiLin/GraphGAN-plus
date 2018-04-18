@@ -20,15 +20,15 @@ def emb2mat(filename, sep="\t"):
     except IOError:
         print("{} is not exist!Please check the path of file".format(filename))
     name = filename[filename.index("ggi"):filename.index(".emb")]
-
+    save_path = '../data/link_prediction' + name
     sio.savemat(name + '.mat', {
         'features': np.array(feature_vectors), 'name': filename
     })
 
 
 if __name__ == "__main__":
-    prefix = '/Users/leon/research/code/GraphGAN/pre_train/link_prediction/'
-    filenames = ["ggi_0.8_unweighted_dis.emb",
-                 "ggi_0.8_unweighted_gen.emb"]
+    prefix = '../pre_train/link_prediction/'
+    filenames = ["ggi_0.3_unweighted_100_dis.emb",
+                 "ggi_0.3_unweighted_100_gen.emb"]
     for filename in filenames:
         emb2mat(prefix + filename)

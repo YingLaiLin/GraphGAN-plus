@@ -26,22 +26,23 @@ gen_update_iter = 200
 window_size = 3
 
 app = "link_prediction"
-source_data = "/ggi_0.8_unweighted_"
+source_data = "/ggi_0.0_unweighted_"
 # source_data = "/test_"
 train_filename = "../../data/" + app + source_data + "train.txt"
 test_filename = "../../data/" + app + source_data + "test.txt"
 test_neg_filename = "../../data/" + app + source_data + "test_neg.txt"
-prob_filename = "../../data/" + app + source_data + "probs.csv"
+prob_filename = "../../data/" + app  + "/probs.csv"
 n_node = 12331
-n_embed = 200
+n_embed = 100
 # fraction of softmax
 fraction_of_softmax = 0.5
 
 # pre_train embbeding result
-pretrain_emd_filename_d = "../../pre_train/" + app + source_data + "pre_train.emb"
-pretrain_emd_filename_g = "../../pre_train/" + app + source_data + "pre_train.emb"
+
+pretrain_emd_filename_d = "../../pre_train/" + app + source_data + str(n_embed) + "_" + "pre_train.emb"
+pretrain_emd_filename_g = "../../pre_train/" + app + source_data + str(n_embed) + "_" + "pre_train.emb"
 modes = ["dis", "gen"]
 emb_filenames = [
-    "../../pre_train/" + app + source_data + modes[0] + ".emb",
-    "../../pre_train/" + app + source_data + modes[1] + ".emb"]
+    "../../pre_train/" + app + source_data + str(n_embed) + "_" + modes[0] + ".emb",
+    "../../pre_train/" + app + source_data + str(n_embed) + "_" + modes[1] + ".emb"]
 result_filename = "../../results/" + app + source_data + "res.txt"
